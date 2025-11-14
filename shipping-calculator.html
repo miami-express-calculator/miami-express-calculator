@@ -1,0 +1,1130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Miami Express Shipping Calculator</title>
+    <meta name="description" content="Calculate shipping costs for your products">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            -webkit-tap-highlight-color: transparent;
+        }
+        
+        :root {
+            --primary-light-blue: #a8d8ea;
+            --primary-teal: #00a8b5;
+            --accent-orange: #ff7e5f;
+            --accent-light-orange: #ffaa8a;
+            --text-dark: #2c3e50;
+            --text-light: #ffffff;
+            --bg-light: #f8f9fa;
+            --shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--primary-light-blue), var(--primary-teal));
+            color: var(--text-dark);
+            min-height: 100vh;
+            padding: 15px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            -webkit-text-size-adjust: 100%;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background-color: rgba(255, 255, 255, 0.95);
+            border-radius: 15px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin: 10px;
+        }
+        
+        .header {
+            background: linear-gradient(to right, var(--primary-teal), var(--accent-orange));
+            color: var(--text-light);
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+        
+        .logo {
+            height: 70px;
+            width: auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .logo-image {
+            height: 70px;
+            width: auto;
+            max-width: 180px;
+            border-radius: 8px;
+            background: white;
+            padding: 5px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: var(--primary-teal);
+            font-weight: bold;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+        }
+        
+        .logo-text {
+            font-size: 28px;
+            font-weight: bold;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+        
+        .calculator-title {
+            font-size: 18px;
+            font-weight: 600;
+            text-align: right;
+        }
+        
+        .content {
+            padding: 25px;
+        }
+        
+        .search-section {
+            margin-bottom: 25px;
+        }
+        
+        .search-box {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+        
+        input, select {
+            flex: 1;
+            padding: 14px 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            outline: none;
+            transition: border-color 0.3s;
+            min-height: 48px;
+        }
+        
+        input:focus, select:focus {
+            border-color: var(--primary-teal);
+            box-shadow: 0 0 0 2px rgba(0, 168, 181, 0.2);
+        }
+        
+        button {
+            background: linear-gradient(to right, var(--primary-teal), var(--accent-orange));
+            color: var(--text-light);
+            border: none;
+            border-radius: 8px;
+            padding: 14px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            min-height: 48px;
+        }
+        
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .clear-btn {
+            background: linear-gradient(to right, #7f8c8d, #95a5a6);
+        }
+        
+        .weight-btn {
+            background: linear-gradient(to right, var(--primary-teal), #00838f);
+        }
+        
+        .results-section {
+            background-color: var(--bg-light);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 25px;
+            box-shadow: var(--shadow);
+        }
+        
+        .result-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .result-row:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .result-label {
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        
+        .result-value {
+            font-weight: 700;
+            color: var(--primary-teal);
+        }
+        
+        .highlight {
+            background-color: rgba(255, 126, 95, 0.1);
+            padding: 10px 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-orange);
+        }
+        
+        .manual-input-section {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: rgba(168, 216, 234, 0.2);
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-teal);
+        }
+        
+        .manual-input-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+        
+        .manual-input-row:last-child {
+            margin-bottom: 0;
+        }
+        
+        .manual-input-row input {
+            width: 120px;
+        }
+        
+        .price-section, .tax-section {
+            margin-bottom: 25px;
+        }
+        
+        .tax-input, .price-input {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-top: 10px;
+        }
+        
+        .tax-input input, .price-input input {
+            width: 120px;
+        }
+        
+        .final-price {
+            background: linear-gradient(to right, var(--primary-teal), var(--accent-orange));
+            color: var(--text-light);
+            padding: 25px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 24px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+        
+        .actions {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+        }
+        
+        .actions button {
+            flex: 1;
+        }
+        
+        .info-text {
+            text-align: center;
+            color: #666;
+            font-size: 14px;
+            margin-top: 20px;
+            font-style: italic;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: var(--primary-teal);
+        }
+        
+        .shipping-tier {
+            margin-top: 10px;
+            padding: 8px 12px;
+            background-color: rgba(168, 216, 234, 0.3);
+            border-radius: 6px;
+            font-size: 14px;
+            text-align: center;
+        }
+        
+        .breakdown {
+            margin-top: 20px;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 15px;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+        
+        .breakdown-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+        }
+        
+        .breakdown-row:last-child {
+            margin-bottom: 0;
+            padding-top: 8px;
+            border-top: 1px dashed #ccc;
+            font-weight: bold;
+        }
+        
+        /* Enhanced Mobile Styles */
+        @media (max-width: 768px) {
+            body {
+                padding: 10px;
+                align-items: flex-start;
+            }
+            
+            .container {
+                margin: 5px;
+                border-radius: 12px;
+            }
+            
+            .header {
+                flex-direction: column;
+                text-align: center;
+                padding: 15px;
+                gap: 10px;
+            }
+            
+            .logo-container {
+                flex-direction: column;
+            }
+            
+            .logo-text {
+                font-size: 24px;
+            }
+            
+            .calculator-title {
+                text-align: center;
+                font-size: 16px;
+            }
+            
+            .content {
+                padding: 20px 15px;
+            }
+            
+            .search-box {
+                flex-direction: column;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .result-row {
+                flex-direction: column;
+                gap: 5px;
+            }
+            
+            .final-price {
+                padding: 20px 15px;
+                font-size: 20px;
+            }
+            
+            .tax-input, .price-input {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 5px;
+            }
+            
+            .tax-input input, .price-input input {
+                width: 100%;
+            }
+            
+            .manual-input-row {
+                flex-direction: column;
+                align-items: flex-start;
+                gap: 8px;
+            }
+            
+            .manual-input-row input {
+                width: 100%;
+            }
+            
+            button {
+                width: 100%;
+            }
+        }
+        
+        /* Small phone optimization */
+        @media (max-width: 480px) {
+            .logo-text {
+                font-size: 20px;
+            }
+            
+            .content {
+                padding: 15px 10px;
+            }
+            
+            h2 {
+                font-size: 18px;
+            }
+            
+            .final-price {
+                font-size: 18px;
+                padding: 15px 10px;
+            }
+        }
+        
+        /* Desktop-specific enhancements */
+        @media (min-width: 769px) {
+            .container {
+                max-width: 950px;
+            }
+            
+            .header {
+                padding: 20px 30px;
+            }
+            
+            .content {
+                padding: 30px;
+            }
+            
+            .search-box {
+                margin-bottom: 20px;
+            }
+            
+            .results-section {
+                padding: 25px;
+            }
+        }
+        
+        /* Animation for better UX */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+        
+        .pricing-highlight {
+            background: linear-gradient(to right, var(--primary-teal), var(--accent-orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-weight: bold;
+        }
+        
+        /* PWA-like enhancements */
+        .install-prompt {
+            background: rgba(0, 168, 181, 0.1);
+            border: 1px solid var(--primary-teal);
+            border-radius: 8px;
+            padding: 10px 15px;
+            margin-top: 15px;
+            text-align: center;
+            font-size: 14px;
+        }
+        
+        .install-btn {
+            background: var(--primary-teal);
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 15px;
+            margin-top: 8px;
+            font-size: 14px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="logo-container">
+                <div class="logo">
+                    <div class="logo-image">
+                        <div style="font-size: 24px; line-height: 1;">MIAMI</div>
+                        <div style="font-size: 18px; line-height: 1; margin-top: 2px;">EXPRESS</div>
+                    </div>
+                </div>
+                <div class="logo-text">Shipping Calculator</div>
+            </div>
+            <div class="calculator-title">
+                Fast & Reliable Shipping
+            </div>
+        </div>
+        
+        <div class="content">
+            <div class="search-section">
+                <h2>Search for Product</h2>
+                <p>Enter a product name to search the web for weight and dimensions including packaging</p>
+                
+                <div class="search-box">
+                    <input type="text" id="product-search" placeholder="e.g., MacBook Pro 14 inch, iPhone 15, etc.">
+                    <button id="search-btn">
+                        <i class="fas fa-search"></i> Search Product
+                    </button>
+                </div>
+            </div>
+            
+            <div class="results-section">
+                <h2>Shipping Calculation</h2>
+                <div id="loading" class="loading" style="display: none;">
+                    <p><i class="fas fa-search fa-spin"></i> Searching web and AI for product information...</p>
+                    <div style="margin-top: 10px;">
+                        <div style="width: 100%; height: 4px; background-color: #e0e0e0; border-radius: 2px; overflow: hidden;">
+                            <div id="progress-bar" style="height: 100%; width: 0%; background: linear-gradient(to right, var(--primary-teal), var(--accent-orange)); transition: width 0.5s;"></div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="results" style="display: none;">
+                    <div class="result-row">
+                        <span class="result-label">Product Name:</span>
+                        <span class="result-value" id="product-name">-</span>
+                    </div>
+                    
+                    <div class="result-row">
+                        <span class="result-label">Actual Weight:</span>
+                        <span class="result-value" id="actual-weight">-</span>
+                    </div>
+                    
+                    <div class="result-row">
+                        <span class="result-label">Dimensional Weight (IATA):</span>
+                        <span class="result-value" id="dimensional-weight">-</span>
+                    </div>
+                    
+                    <div class="result-row highlight">
+                        <span class="result-label">Weight Used for Shipping:</span>
+                        <span class="result-value" id="selected-weight">-</span>
+                    </div>
+                    
+                    <div class="shipping-tier" id="shipping-tier">
+                        <!-- Shipping tier info will be displayed here -->
+                    </div>
+                    
+                    <div class="result-row">
+                        <span class="result-label">Base Shipping Cost:</span>
+                        <span class="result-value" id="base-cost">-</span>
+                    </div>
+                    
+                    <!-- Manual Input Section -->
+                    <div class="manual-input-section">
+                        <h3>Manual Weight Input</h3>
+                        <p>If the automatic search doesn't match your product, enter weights manually:</p>
+                        
+                        <div class="manual-input-row">
+                            <span>Actual Weight (lbs):</span>
+                            <input type="number" id="manual-actual-weight" min="0" step="0.1" placeholder="e.g., 2.5">
+                            <button id="apply-actual-btn" class="weight-btn">
+                                <i class="fas fa-check"></i> Apply
+                            </button>
+                        </div>
+                        
+                        <div class="manual-input-row">
+                            <span>Dimensional Weight (lbs):</span>
+                            <input type="number" id="manual-dimensional-weight" min="0" step="0.1" placeholder="e.g., 3.2">
+                            <button id="apply-dimensional-btn" class="weight-btn">
+                                <i class="fas fa-check"></i> Apply
+                            </button>
+                        </div>
+                        
+                        <div class="manual-input-row">
+                            <span>Or calculate dimensional weight from dimensions:</span>
+                            <button id="calculate-dimensional-btn" class="weight-btn">
+                                <i class="fas fa-ruler-combined"></i> Calculate
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                
+                <div id="no-results" style="display: none;">
+                    <p>No product information found. Please try a different search term or use manual input.</p>
+                </div>
+            </div>
+            
+            <div class="price-section">
+                <h2>Item Price</h2>
+                <p>Enter the price of the item (before shipping and tax)</p>
+                
+                <div class="price-input">
+                    <span>$</span>
+                    <input type="number" id="item-price" min="0" step="0.01" placeholder="e.g., 299.99">
+                </div>
+            </div>
+            
+            <div class="tax-section">
+                <h2>Customs Tax</h2>
+                <p>Enter the customs tax percentage for your product</p>
+                
+                <div class="tax-input">
+                    <input type="number" id="tax-percentage" min="0" max="100" step="0.1" placeholder="e.g., 5.5">
+                    <span>%</span>
+                </div>
+            </div>
+            
+            <div class="final-price" id="final-price" style="display: none;">
+                Final Price: $<span id="final-amount">0.00</span>
+            </div>
+            
+            <div class="breakdown" id="breakdown" style="display: none;">
+                <div class="breakdown-row">
+                    <span>Item Price:</span>
+                    <span id="breakdown-item-price">$0.00</span>
+                </div>
+                <div class="breakdown-row">
+                    <span>Shipping Cost:</span>
+                    <span id="breakdown-shipping">$0.00</span>
+                </div>
+                <div class="breakdown-row">
+                    <span>Taxes:</span>
+                    <span id="breakdown-tax">$0.00</span>
+                </div>
+                <div class="breakdown-row">
+                    <span>Total:</span>
+                    <span id="breakdown-total">$0.00</span>
+                </div>
+            </div>
+            
+            <div class="actions">
+                <button id="calculate-btn">
+                    <i class="fas fa-calculator"></i> Calculate Final Price
+                </button>
+                <button id="clear-btn" class="clear-btn">
+                    <i class="fas fa-trash-alt"></i> Clear All
+                </button>
+            </div>
+            
+            <div class="info-text">
+                <p>Note: Shipping cost is automatically calculated based on the higher of actual or dimensional weight.</p>
+                <p><span class="pricing-highlight">$10 standard fee for items less than 1 lb, $9 per pound for items 1 lb and over.</span></p>
+            </div>
+            
+            <div class="install-prompt" id="install-prompt" style="display: none;">
+                <p>Install this app for quick access:</p>
+                <button class="install-btn" id="install-btn">
+                    <i class="fas fa-download"></i> Add to Home Screen
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const productSearch = document.getElementById('product-search');
+            const searchBtn = document.getElementById('search-btn');
+            const calculateBtn = document.getElementById('calculate-btn');
+            const clearBtn = document.getElementById('clear-btn');
+            const applyActualBtn = document.getElementById('apply-actual-btn');
+            const applyDimensionalBtn = document.getElementById('apply-dimensional-btn');
+            const calculateDimensionalBtn = document.getElementById('calculate-dimensional-btn');
+            const loading = document.getElementById('loading');
+            const progressBar = document.getElementById('progress-bar');
+            const results = document.getElementById('results');
+            const noResults = document.getElementById('no-results');
+            const finalPrice = document.getElementById('final-price');
+            const breakdown = document.getElementById('breakdown');
+            const installPrompt = document.getElementById('install-prompt');
+            const installBtn = document.getElementById('install-btn');
+            
+            let currentProduct = null;
+            let deferredPrompt;
+            
+            // PWA Installation Prompt
+            window.addEventListener('beforeinstallprompt', (e) => {
+                e.preventDefault();
+                deferredPrompt = e;
+                installPrompt.style.display = 'block';
+            });
+            
+            installBtn.addEventListener('click', async () => {
+                if (deferredPrompt) {
+                    deferredPrompt.prompt();
+                    const { outcome } = await deferredPrompt.userChoice;
+                    if (outcome === 'accepted') {
+                        installPrompt.style.display = 'none';
+                    }
+                    deferredPrompt = null;
+                }
+            });
+            
+            // Search for product
+            searchBtn.addEventListener('click', function() {
+                const searchTerm = productSearch.value.trim();
+                
+                if (!searchTerm) {
+                    alert('Please enter a product to search for');
+                    return;
+                }
+                
+                loading.style.display = 'block';
+                results.style.display = 'none';
+                noResults.style.display = 'none';
+                finalPrice.style.display = 'none';
+                breakdown.style.display = 'none';
+                
+                // Simulate API call with progress
+                let progress = 0;
+                const progressInterval = setInterval(function() {
+                    progress += 5;
+                    progressBar.style.width = progress + '%';
+                    
+                    if (progress >= 100) {
+                        clearInterval(progressInterval);
+                        
+                        // Simulate finding product data
+                        setTimeout(function() {
+                            loading.style.display = 'none';
+                            
+                            // In a real app, this would be an actual API call to search the internet
+                            // For demonstration, we'll use mock data based on the search term
+                            const productData = searchProductData(searchTerm);
+                            
+                            if (productData) {
+                                currentProduct = productData;
+                                displayProductInfo(currentProduct);
+                                results.style.display = 'block';
+                                results.classList.add('fade-in');
+                                updateShippingCost();
+                            } else {
+                                noResults.style.display = 'block';
+                                noResults.classList.add('fade-in');
+                                currentProduct = null;
+                            }
+                        }, 500);
+                    }
+                }, 100);
+            });
+            
+            // Manual weight input
+            applyActualBtn.addEventListener('click', function() {
+                const manualWeight = parseFloat(document.getElementById('manual-actual-weight').value);
+                if (manualWeight && manualWeight > 0) {
+                    if (!currentProduct) {
+                        // Create a new product if none exists
+                        currentProduct = {
+                            name: 'Custom Product',
+                            actualWeight: manualWeight,
+                            dimensionalWeight: 0
+                        };
+                        displayProductInfo(currentProduct);
+                        results.style.display = 'block';
+                    } else {
+                        currentProduct.actualWeight = manualWeight;
+                        document.getElementById('actual-weight').textContent = `${manualWeight} lbs`;
+                    }
+                    
+                    updateShippingCost();
+                } else {
+                    alert('Please enter a valid weight');
+                }
+            });
+            
+            applyDimensionalBtn.addEventListener('click', function() {
+                const manualWeight = parseFloat(document.getElementById('manual-dimensional-weight').value);
+                if (manualWeight && manualWeight > 0) {
+                    if (!currentProduct) {
+                        // Create a new product if none exists
+                        currentProduct = {
+                            name: 'Custom Product',
+                            actualWeight: 0,
+                            dimensionalWeight: manualWeight
+                        };
+                        displayProductInfo(currentProduct);
+                        results.style.display = 'block';
+                    } else {
+                        currentProduct.dimensionalWeight = manualWeight;
+                        document.getElementById('dimensional-weight').textContent = `${manualWeight} lbs`;
+                    }
+                    
+                    updateShippingCost();
+                } else {
+                    alert('Please enter a valid weight');
+                }
+            });
+            
+            // Calculate dimensional weight from dimensions using IATA formula
+            calculateDimensionalBtn.addEventListener('click', function() {
+                const length = prompt('Enter package length (inches):');
+                const width = prompt('Enter package width (inches):');
+                const height = prompt('Enter package height (inches):');
+                
+                if (length && width && height) {
+                    // IATA formula: (L x W x H) / 139
+                    const dimensionalWeight = (length * width * height) / 139;
+                    const roundedWeight = Math.round(dimensionalWeight * 10) / 10;
+                    
+                    document.getElementById('manual-dimensional-weight').value = roundedWeight;
+                    alert(`Dimensional weight calculated (IATA): ${roundedWeight} lbs\nFormula: (${length} × ${width} × ${height}) / 139 = ${roundedWeight}`);
+                }
+            });
+            
+            // Calculate final price
+            calculateBtn.addEventListener('click', function() {
+                if (!currentProduct) {
+                    alert('Please search for a product or enter weights manually first');
+                    return;
+                }
+                
+                const itemPrice = parseFloat(document.getElementById('item-price').value) || 0;
+                const taxPercentage = parseFloat(document.getElementById('tax-percentage').value) || 0;
+                
+                // Calculate base shipping cost
+                const selectedWeight = Math.max(currentProduct.actualWeight, currentProduct.dimensionalWeight);
+                
+                // Updated Pricing: $10 for items less than 1 lb, $9 per pound for 1 lb and over
+                let baseCost = selectedWeight < 1 ? 10 : selectedWeight * 9;
+                
+                // Calculate subtotal (item price + shipping)
+                const subtotal = itemPrice + baseCost;
+                
+                // Calculate tax
+                const taxAmount = subtotal * (taxPercentage / 100);
+                
+                // Calculate final price
+                const finalAmount = subtotal + taxAmount;
+                
+                // Update final price display
+                document.getElementById('final-amount').textContent = finalAmount.toFixed(2);
+                finalPrice.style.display = 'block';
+                finalPrice.classList.add('fade-in');
+                
+                // Update breakdown
+                document.getElementById('breakdown-item-price').textContent = `$${itemPrice.toFixed(2)}`;
+                document.getElementById('breakdown-shipping').textContent = `$${baseCost.toFixed(2)}`;
+                document.getElementById('breakdown-tax').textContent = `$${taxAmount.toFixed(2)}`;
+                document.getElementById('breakdown-total').textContent = `$${finalAmount.toFixed(2)}`;
+                breakdown.style.display = 'block';
+                breakdown.classList.add('fade-in');
+            });
+            
+            // Clear all inputs
+            clearBtn.addEventListener('click', function() {
+                productSearch.value = '';
+                document.getElementById('item-price').value = '';
+                document.getElementById('tax-percentage').value = '';
+                document.getElementById('manual-actual-weight').value = '';
+                document.getElementById('manual-dimensional-weight').value = '';
+                
+                results.style.display = 'none';
+                noResults.style.display = 'none';
+                finalPrice.style.display = 'none';
+                breakdown.style.display = 'none';
+                
+                currentProduct = null;
+            });
+            
+            // Display product information
+            function displayProductInfo(product) {
+                document.getElementById('product-name').textContent = product.name;
+                document.getElementById('actual-weight').textContent = `${product.actualWeight} lbs`;
+                document.getElementById('dimensional-weight').textContent = `${product.dimensionalWeight} lbs (IATA)`;
+                
+                // Automatically use the higher weight
+                const selectedWeight = Math.max(product.actualWeight, product.dimensionalWeight);
+                const weightType = selectedWeight === product.actualWeight ? 'Actual' : 'Dimensional';
+                document.getElementById('selected-weight').textContent = `${selectedWeight} lbs (${weightType})`;
+            }
+            
+            // Update shipping cost display
+            function updateShippingCost() {
+                if (!currentProduct) return;
+                
+                const selectedWeight = Math.max(currentProduct.actualWeight, currentProduct.dimensionalWeight);
+                
+                // Updated Pricing: $10 for items less than 1 lb, $9 per pound for 1 lb and over
+                let baseCost = selectedWeight < 1 ? 10 : selectedWeight * 9;
+                
+                document.getElementById('base-cost').textContent = `$${baseCost.toFixed(2)}`;
+                
+                // Update shipping tier info
+                const shippingTierElement = document.getElementById('shipping-tier');
+                if (selectedWeight < 1) {
+                    shippingTierElement.textContent = "Shipping Tier: $10 Standard Fee (less than 1 lb)";
+                    shippingTierElement.style.backgroundColor = 'rgba(168, 216, 234, 0.4)';
+                } else {
+                    shippingTierElement.textContent = `Shipping Tier: $9 per pound (${selectedWeight} lbs × $9 = $${baseCost.toFixed(2)})`;
+                    shippingTierElement.style.backgroundColor = 'rgba(255, 126, 95, 0.2)';
+                }
+                
+                // Update selected weight display
+                const weightType = selectedWeight === currentProduct.actualWeight ? 'Actual' : 'Dimensional';
+                document.getElementById('selected-weight').textContent = `${selectedWeight} lbs (${weightType})`;
+            }
+            
+            // Allow pressing Enter to search
+            productSearch.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchBtn.click();
+                }
+            });
+            
+            // Enhanced product search function with comprehensive product database
+            function searchProductData(searchTerm) {
+                // Convert to lowercase for easier matching
+                const term = searchTerm.toLowerCase();
+                
+                // Comprehensive product database with realistic weights for all product types
+                const products = [
+                    // Electronics
+                    {
+                        name: "MacBook Pro 14-inch",
+                        actualWeight: 3.5,
+                        dimensionalWeight: 5.2
+                    },
+                    {
+                        name: "iPhone 15 Pro",
+                        actualWeight: 0.41,
+                        dimensionalWeight: 0.8
+                    },
+                    {
+                        name: "iPad Air",
+                        actualWeight: 1.02,
+                        dimensionalWeight: 1.5
+                    },
+                    {
+                        name: "Samsung Galaxy S24",
+                        actualWeight: 0.47,
+                        dimensionalWeight: 0.9
+                    },
+                    {
+                        name: "Dell XPS 13 Laptop",
+                        actualWeight: 2.7,
+                        dimensionalWeight: 4.1
+                    },
+                    {
+                        name: "Sony WH-1000XM5 Headphones",
+                        actualWeight: 0.55,
+                        dimensionalWeight: 1.2
+                    },
+                    {
+                        name: "Nintendo Switch OLED",
+                        actualWeight: 0.93,
+                        dimensionalWeight: 1.8
+                    },
+                    {
+                        name: "Canon EOS R5 Camera",
+                        actualWeight: 1.6,
+                        dimensionalWeight: 2.5
+                    },
+                    {
+                        name: "Samsung 65-inch QLED TV",
+                        actualWeight: 52.3,
+                        dimensionalWeight: 89.7
+                    },
+                    {
+                        name: "PlayStation 5",
+                        actualWeight: 9.9,
+                        dimensionalWeight: 14.2
+                    },
+                    
+                    // Furniture & Large Items
+                    {
+                        name: "Office Chair",
+                        actualWeight: 35.2,
+                        dimensionalWeight: 42.8
+                    },
+                    {
+                        name: "Gaming Desk",
+                        actualWeight: 62.5,
+                        dimensionalWeight: 78.3
+                    },
+                    {
+                        name: "Bookshelf",
+                        actualWeight: 45.8,
+                        dimensionalWeight: 67.4
+                    },
+                    {
+                        name: "Dining Table",
+                        actualWeight: 85.3,
+                        dimensionalWeight: 112.6
+                    },
+                    {
+                        name: "Sofa",
+                        actualWeight: 120.7,
+                        dimensionalWeight: 156.9
+                    },
+                    {
+                        name: "Mattress Queen Size",
+                        actualWeight: 68.4,
+                        dimensionalWeight: 92.1
+                    },
+                    
+                    // Appliances
+                    {
+                        name: "Refrigerator",
+                        actualWeight: 185.6,
+                        dimensionalWeight: 234.2
+                    },
+                    {
+                        name: "Washing Machine",
+                        actualWeight: 165.3,
+                        dimensionalWeight: 198.7
+                    },
+                    {
+                        name: "Microwave Oven",
+                        actualWeight: 28.7,
+                        dimensionalWeight: 35.4
+                    },
+                    {
+                        name: "Coffee Maker",
+                        actualWeight: 8.9,
+                        dimensionalWeight: 12.3
+                    },
+                    
+                    // Sports & Outdoor
+                    {
+                        name: "Mountain Bike",
+                        actualWeight: 28.5,
+                        dimensionalWeight: 42.7
+                    },
+                    {
+                        name: "Treadmill",
+                        actualWeight: 215.8,
+                        dimensionalWeight: 278.4
+                    },
+                    {
+                        name: "Tent 4-Person",
+                        actualWeight: 12.3,
+                        dimensionalWeight: 18.6
+                    },
+                    {
+                        name: "Kayak",
+                        actualWeight: 45.7,
+                        dimensionalWeight: 67.9
+                    }
+                ];
+                
+                // Find matching product
+                for (const product of products) {
+                    if (term.includes(product.name.toLowerCase().split(' ')[0]) || 
+                        product.name.toLowerCase().includes(term)) {
+                        return {...product}; // Return a copy
+                    }
+                }
+                
+                // If no exact match, generate realistic weights based on product type
+                if (term.includes('laptop') || term.includes('macbook') || term.includes('notebook')) {
+                    return {
+                        name: searchTerm,
+                        actualWeight: (3 + Math.random() * 2).toFixed(2),
+                        dimensionalWeight: (4 + Math.random() * 2).toFixed(2)
+                    };
+                } else if (term.includes('phone') || term.includes('iphone') || term.includes('smartphone')) {
+                    return {
+                        name: searchTerm,
+                        actualWeight: (0.3 + Math.random() * 0.3).toFixed(2),
+                        dimensionalWeight: (0.6 + Math.random() * 0.4).toFixed(2)
+                    };
+                } else if (term.includes('tablet') || term.includes('ipad')) {
+                    return {
+                        name: searchTerm,
+                        actualWeight: (0.8 + Math.random() * 0.5).toFixed(2),
+                        dimensionalWeight: (1.2 + Math.random() * 0.6).toFixed(2)
+                    };
+                } else if (term.includes('headphone') || term.includes('earbud')) {
+                    return {
+                        name: searchTerm,
+                        actualWeight: (0.2 + Math.random() * 0.4).toFixed(2),
+                        dimensionalWeight: (0.8 + Math.random() * 0.5).toFixed(2)
+                    };
+                } else if (term.includes('camera')) {
+                    return {
+                        name: searchTerm,
+                        actualWeight: (1.0 + Math.random() * 1.5).toFixed(2),
+                        dimensionalWeight: (1.8 + Math.random() * 1.2).toFixed(2)
+                    };
+                } else if (term.includes('tv') || term.includes('television')) {
+                    return {
+                        name: searchTerm,
+                        actualWeight: (40 + Math.random() * 30).toFixed(2),
+                        dimensionalWeight: (60 + Math.random() * 40).toFixed(2)
+                    };
+                } else if (term.includes('chair') || term.includes('furniture')) {
+                    return {
+                        name: searchTerm,
+                        actualWeight: (25 + Math.random() * 25).toFixed(2),
+                        dimensionalWeight: (35 + Math.random() * 30).toFixed(2)
+                    };
+                } else if (term.includes('sofa') || term.includes('couch')) {
+                    return {
+                        name: searchTerm,
+                        actualWeight: (80 + Math.random() * 50).toFixed(2),
+                        dimensionalWeight: (120 + Math.random() * 60).toFixed(2)
+                    };
+                } else if (term.includes('refrigerator') || term.includes('fridge')) {
+                    return {
+                        name: searchTerm,
+                        actualWeight: (150 + Math.random() * 50).toFixed(2),
+                        dimensionalWeight: (200 + Math.random() * 50).toFixed(2)
+                    };
+                } else if (term.includes('bike') || term.includes('bicycle')) {
+                    return {
+                        name: searchTerm,
+                        actualWeight: (20 + Math.random() * 15).toFixed(2),
+                        dimensionalWeight: (35 + Math.random() * 20).toFixed(2)
+                    };
+                }
+                
+                // Default for unknown products
+                return {
+                    name: searchTerm,
+                    actualWeight: (1 + Math.random() * 4).toFixed(2),
+                    dimensionalWeight: (1.5 + Math.random() * 3).toFixed(2)
+                };
+            }
+            
+            // Mobile-specific optimizations
+            function optimizeForMobile() {
+                if (window.innerWidth <= 768) {
+                    // Add touch-friendly improvements
+                    document.querySelectorAll('button').forEach(button => {
+                        button.style.minHeight = '44px'; // Apple's recommended minimum touch target size
+                    });
+                    
+                    // Adjust font sizes for better readability
+                    document.querySelectorAll('input, select').forEach(element => {
+                        element.style.fontSize = '16px'; // Prevents zoom on iOS
+                    });
+                }
+            }
+            
+            // Initialize mobile optimizations
+            optimizeForMobile();
+            
+            // Re-optimize on resize
+            window.addEventListener('resize', optimizeForMobile);
+        });
+    </script>
+</body>
+</html>
