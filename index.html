@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Miami Express Shipping Calculator</title>
-    <meta name="description" content="Calculate shipping costs for your products">
+    <meta name="description" content="Calculate shipping costs for your products with Miami Express">
+    <meta name="keywords" content="shipping calculator, miami express, shipping costs, product shipping">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         * {
@@ -16,10 +17,10 @@
         }
         
         :root {
-            --primary-light-blue: #a8d8ea;
-            --primary-teal: #00a8b5;
-            --accent-orange: #ff7e5f;
-            --accent-light-orange: #ffaa8a;
+            --primary-light-blue: #4BA5A5;
+            --primary-teal: #4BA5A5;
+            --accent-orange: #d92525;
+            --accent-light-orange: #ff5252;
             --text-dark: #2c3e50;
             --text-light: #ffffff;
             --bg-light: #f8f9fa;
@@ -27,7 +28,7 @@
         }
         
         body {
-            background: linear-gradient(135deg, var(--primary-light-blue), var(--primary-teal));
+            background: linear-gradient(135deg, var(--primary-light-blue), #3a8a8a);
             color: var(--text-dark);
             min-height: 100vh;
             padding: 15px;
@@ -50,52 +51,38 @@
         .header {
             background: linear-gradient(to right, var(--primary-teal), var(--accent-orange));
             color: var(--text-light);
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+            padding: 25px 20px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
         }
         
         .logo-container {
             display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-        
-        .logo {
-            height: 70px;
-            width: auto;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        
-        .logo-image {
-            height: 70px;
-            width: auto;
-            max-width: 180px;
-            border-radius: 8px;
-            background: white;
-            padding: 5px;
-            display: flex;
             flex-direction: column;
-            justify-content: center;
             align-items: center;
-            color: var(--primary-teal);
-            font-weight: bold;
-            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+            gap: 8px;
         }
         
         .logo-text {
-            font-size: 28px;
+            font-family: Arial, sans-serif;
+            font-size: 42px;
             font-weight: bold;
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            font-style: italic;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            text-shadow: 2px 2px 3px rgba(0, 0, 0, 0.2);
+            line-height: 1;
+            color: #ffffff;
+            margin-bottom: 5px;
         }
         
         .calculator-title {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
-            text-align: right;
+            opacity: 0.9;
+            letter-spacing: 1px;
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.3);
         }
         
         .content {
@@ -125,7 +112,7 @@
         
         input:focus, select:focus {
             border-color: var(--primary-teal);
-            box-shadow: 0 0 0 2px rgba(0, 168, 181, 0.2);
+            box-shadow: 0 0 0 2px rgba(75, 165, 165, 0.2);
         }
         
         button {
@@ -159,7 +146,7 @@
         }
         
         .weight-btn {
-            background: linear-gradient(to right, var(--primary-teal), #00838f);
+            background: linear-gradient(to right, var(--primary-teal), #3a8a8a);
         }
         
         .results-section {
@@ -191,11 +178,11 @@
         
         .result-value {
             font-weight: 700;
-            color: var(--primary-teal);
+            color: #3a8a8a;
         }
         
         .highlight {
-            background-color: rgba(255, 126, 95, 0.1);
+            background-color: rgba(217, 37, 37, 0.1);
             padding: 10px 15px;
             border-radius: 8px;
             border-left: 4px solid var(--accent-orange);
@@ -204,9 +191,9 @@
         .manual-input-section {
             margin-top: 20px;
             padding: 15px;
-            background-color: rgba(168, 216, 234, 0.2);
+            background-color: rgba(75, 165, 165, 0.2);
             border-radius: 8px;
-            border-left: 4px solid var(--primary-teal);
+            border-left: 4px solid #3a8a8a;
         }
         
         .manual-input-row {
@@ -272,13 +259,13 @@
         .loading {
             text-align: center;
             padding: 20px;
-            color: var(--primary-teal);
+            color: #3a8a8a;
         }
         
         .shipping-tier {
             margin-top: 10px;
             padding: 8px 12px;
-            background-color: rgba(168, 216, 234, 0.3);
+            background-color: rgba(75, 165, 165, 0.3);
             border-radius: 6px;
             font-size: 14px;
             text-align: center;
@@ -305,6 +292,32 @@
             font-weight: bold;
         }
         
+        .standard-price-badge {
+            background-color: var(--accent-orange);
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 8px;
+        }
+
+        .qr-section {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: rgba(255, 255, 255, 0.8);
+            border-radius: 10px;
+        }
+        
+        .qr-code {
+            margin: 15px auto;
+            padding: 10px;
+            background: white;
+            border-radius: 8px;
+            display: inline-block;
+        }
+        
         /* Enhanced Mobile Styles */
         @media (max-width: 768px) {
             body {
@@ -318,23 +331,16 @@
             }
             
             .header {
-                flex-direction: column;
-                text-align: center;
-                padding: 15px;
-                gap: 10px;
-            }
-            
-            .logo-container {
-                flex-direction: column;
+                padding: 20px 15px;
             }
             
             .logo-text {
-                font-size: 24px;
+                font-size: 32px;
+                letter-spacing: 1.5px;
             }
             
             .calculator-title {
-                text-align: center;
-                font-size: 16px;
+                font-size: 14px;
             }
             
             .content {
@@ -382,12 +388,17 @@
             button {
                 width: 100%;
             }
+
+            .qr-code canvas {
+                max-width: 200px;
+                height: auto;
+            }
         }
         
         /* Small phone optimization */
         @media (max-width: 480px) {
             .logo-text {
-                font-size: 20px;
+                font-size: 28px;
             }
             
             .content {
@@ -411,7 +422,7 @@
             }
             
             .header {
-                padding: 20px 30px;
+                padding: 25px 30px;
             }
             
             .content {
@@ -438,32 +449,10 @@
         }
         
         .pricing-highlight {
-            background: linear-gradient(to right, var(--primary-teal), var(--accent-orange));
+            background: linear-gradient(to right, #3a8a8a, var(--accent-orange));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: bold;
-        }
-        
-        /* PWA-like enhancements */
-        .install-prompt {
-            background: rgba(0, 168, 181, 0.1);
-            border: 1px solid var(--primary-teal);
-            border-radius: 8px;
-            padding: 10px 15px;
-            margin-top: 15px;
-            text-align: center;
-            font-size: 14px;
-        }
-        
-        .install-btn {
-            background: var(--primary-teal);
-            color: white;
-            border: none;
-            border-radius: 5px;
-            padding: 8px 15px;
-            margin-top: 8px;
-            font-size: 14px;
-            cursor: pointer;
         }
     </style>
 </head>
@@ -471,26 +460,18 @@
     <div class="container">
         <div class="header">
             <div class="logo-container">
-                <div class="logo">
-                    <div class="logo-image">
-                        <div style="font-size: 24px; line-height: 1;">MIAMI</div>
-                        <div style="font-size: 18px; line-height: 1; margin-top: 2px;">EXPRESS</div>
-                    </div>
-                </div>
-                <div class="logo-text">Shipping Calculator</div>
-            </div>
-            <div class="calculator-title">
-                Fast & Reliable Shipping
+                <div class="logo-text">Miami express</div>
+                <div class="calculator-title">Fast & Reliable Shipping Calculator</div>
             </div>
         </div>
         
         <div class="content">
             <div class="search-section">
                 <h2>Search for Product</h2>
-                <p>Enter a product name to search the web for weight and dimensions including packaging</p>
+                <p>Enter a product name to search for weight, dimensions, and shipping costs</p>
                 
                 <div class="search-box">
-                    <input type="text" id="product-search" placeholder="e.g., MacBook Pro 14 inch, iPhone 15, etc.">
+                    <input type="text" id="product-search" placeholder="e.g., iPhone, Samsung Galaxy, Laptop, Stanley bottle, etc.">
                     <button id="search-btn">
                         <i class="fas fa-search"></i> Search Product
                     </button>
@@ -500,10 +481,10 @@
             <div class="results-section">
                 <h2>Shipping Calculation</h2>
                 <div id="loading" class="loading" style="display: none;">
-                    <p><i class="fas fa-search fa-spin"></i> Searching web and AI for product information...</p>
+                    <p><i class="fas fa-search fa-spin"></i> Searching for product information...</p>
                     <div style="margin-top: 10px;">
                         <div style="width: 100%; height: 4px; background-color: #e0e0e0; border-radius: 2px; overflow: hidden;">
-                            <div id="progress-bar" style="height: 100%; width: 0%; background: linear-gradient(to right, var(--primary-teal), var(--accent-orange)); transition: width 0.5s;"></div>
+                            <div id="progress-bar" style="height: 100%; width: 0%; background: linear-gradient(to right, #3a8a8a, var(--accent-orange)); transition: width 0.5s;"></div>
                         </div>
                     </div>
                 </div>
@@ -624,21 +605,27 @@
                     <i class="fas fa-trash-alt"></i> Clear All
                 </button>
             </div>
+
+            <!-- QR Code Section -->
+            <div class="qr-section">
+                <h3>Share This Calculator</h3>
+                <p>Scan QR code to access on mobile</p>
+                <div class="qr-code" id="qr-code">
+                    <!-- QR code will be generated here -->
+                </div>
+            </div>
             
             <div class="info-text">
                 <p>Note: Shipping cost is automatically calculated based on the higher of actual or dimensional weight.</p>
                 <p><span class="pricing-highlight">$10 standard fee for items less than 1 lb, $9 per pound for items 1 lb and over.</span></p>
-            </div>
-            
-            <div class="install-prompt" id="install-prompt" style="display: none;">
-                <p>Install this app for quick access:</p>
-                <button class="install-btn" id="install-btn">
-                    <i class="fas fa-download"></i> Add to Home Screen
-                </button>
+                <p>Some products have standard shipping prices that will be automatically applied.</p>
             </div>
         </div>
     </div>
 
+    <!-- QR Code Library -->
+    <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+    
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             const productSearch = document.getElementById('product-search');
@@ -654,29 +641,41 @@
             const noResults = document.getElementById('no-results');
             const finalPrice = document.getElementById('final-price');
             const breakdown = document.getElementById('breakdown');
-            const installPrompt = document.getElementById('install-prompt');
-            const installBtn = document.getElementById('install-btn');
+            const qrCodeElement = document.getElementById('qr-code');
             
             let currentProduct = null;
-            let deferredPrompt;
             
-            // PWA Installation Prompt
-            window.addEventListener('beforeinstallprompt', (e) => {
-                e.preventDefault();
-                deferredPrompt = e;
-                installPrompt.style.display = 'block';
-            });
-            
-            installBtn.addEventListener('click', async () => {
-                if (deferredPrompt) {
-                    deferredPrompt.prompt();
-                    const { outcome } = await deferredPrompt.userChoice;
-                    if (outcome === 'accepted') {
-                        installPrompt.style.display = 'none';
+            // Generate QR Code
+            function generateQRCode() {
+                const currentUrl = window.location.href;
+                QRCode.toCanvas(qrCodeElement, currentUrl, {
+                    width: 200,
+                    height: 200,
+                    margin: 1,
+                    color: {
+                        dark: '#2c3e50',
+                        light: '#ffffff'
                     }
-                    deferredPrompt = null;
-                }
-            });
+                }, function(error) {
+                    if (error) console.error(error);
+                });
+            }
+            
+            // Generate QR code on page load
+            generateQRCode();
+
+            // Standard price database
+            const standardPriceDatabase = {
+                'iphone': 45,
+                'samsung galaxy': 45,
+                'laptop': 95,
+                'sun glasses': 30,
+                'sunglasses': 30,
+                'prescription glasses': 45,
+                'shoes': 30,
+                'mobile phone': 40,
+                'stanley bottle': 15
+            };
             
             // Search for product
             searchBtn.addEventListener('click', function() {
@@ -706,12 +705,12 @@
                         setTimeout(function() {
                             loading.style.display = 'none';
                             
-                            // In a real app, this would be an actual API call to search the internet
-                            // For demonstration, we'll use mock data based on the search term
-                            const productData = searchProductData(searchTerm);
+                            // Search for product data
+                            const searchResults = searchProductData(searchTerm);
                             
-                            if (productData) {
-                                currentProduct = productData;
+                            if (searchResults && searchResults.length > 0) {
+                                // Use the first result directly
+                                currentProduct = searchResults[0];
                                 displayProductInfo(currentProduct);
                                 results.style.display = 'block';
                                 results.classList.add('fade-in');
@@ -802,8 +801,15 @@
                 // Calculate base shipping cost
                 const selectedWeight = Math.max(currentProduct.actualWeight, currentProduct.dimensionalWeight);
                 
-                // Updated Pricing: $10 for items less than 1 lb, $9 per pound for 1 lb and over
-                let baseCost = selectedWeight < 1 ? 10 : selectedWeight * 9;
+                // Check if product has a standard price
+                const standardPrice = getStandardPrice(currentProduct.name);
+                
+                // Use standard price if available, otherwise calculate based on weight
+                let baseCost = standardPrice;
+                if (!baseCost) {
+                    // Updated Pricing: $10 for items less than 1 lb, $9 per pound for items 1 lb and over
+                    baseCost = selectedWeight < 1 ? 10 : selectedWeight * 9;
+                }
                 
                 // Calculate subtotal (item price + shipping)
                 const subtotal = itemPrice + baseCost;
@@ -862,24 +868,58 @@
                 
                 const selectedWeight = Math.max(currentProduct.actualWeight, currentProduct.dimensionalWeight);
                 
-                // Updated Pricing: $10 for items less than 1 lb, $9 per pound for 1 lb and over
-                let baseCost = selectedWeight < 1 ? 10 : selectedWeight * 9;
+                // Check if product has a standard price
+                const standardPrice = getStandardPrice(currentProduct.name);
+                
+                // Use standard price if available, otherwise calculate based on weight
+                let baseCost = standardPrice;
+                if (!baseCost) {
+                    // Updated Pricing: $10 for items less than 1 lb, $9 per pound for items 1 lb and over
+                    baseCost = selectedWeight < 1 ? 10 : selectedWeight * 9;
+                }
                 
                 document.getElementById('base-cost').textContent = `$${baseCost.toFixed(2)}`;
                 
                 // Update shipping tier info
                 const shippingTierElement = document.getElementById('shipping-tier');
-                if (selectedWeight < 1) {
+                if (standardPrice) {
+                    shippingTierElement.textContent = `Shipping Tier: Standard Price Applied ($${standardPrice})`;
+                    shippingTierElement.style.backgroundColor = 'rgba(217, 37, 37, 0.3)';
+                } else if (selectedWeight < 1) {
                     shippingTierElement.textContent = "Shipping Tier: $10 Standard Fee (less than 1 lb)";
-                    shippingTierElement.style.backgroundColor = 'rgba(168, 216, 234, 0.4)';
+                    shippingTierElement.style.backgroundColor = 'rgba(75, 165, 165, 0.5)';
                 } else {
                     shippingTierElement.textContent = `Shipping Tier: $9 per pound (${selectedWeight} lbs × $9 = $${baseCost.toFixed(2)})`;
-                    shippingTierElement.style.backgroundColor = 'rgba(255, 126, 95, 0.2)';
+                    shippingTierElement.style.backgroundColor = 'rgba(217, 37, 37, 0.25)';
                 }
                 
                 // Update selected weight display
                 const weightType = selectedWeight === currentProduct.actualWeight ? 'Actual' : 'Dimensional';
                 document.getElementById('selected-weight').textContent = `${selectedWeight} lbs (${weightType})`;
+            }
+            
+            // Get standard price for a product
+            function getStandardPrice(productName) {
+                const name = productName.toLowerCase();
+                
+                // Check for exact matches first
+                for (const key in standardPriceDatabase) {
+                    if (name.includes(key)) {
+                        return standardPriceDatabase[key];
+                    }
+                }
+                
+                // Check for partial matches
+                if (name.includes('iphone')) return standardPriceDatabase['iphone'];
+                if (name.includes('samsung') && name.includes('galaxy')) return standardPriceDatabase['samsung galaxy'];
+                if (name.includes('laptop')) return standardPriceDatabase['laptop'];
+                if (name.includes('sunglass') || name.includes('sun glass')) return standardPriceDatabase['sunglasses'];
+                if (name.includes('prescription') && name.includes('glass')) return standardPriceDatabase['prescription glasses'];
+                if (name.includes('shoes') && !name.includes('children')) return standardPriceDatabase['shoes'];
+                if (name.includes('mobile') && name.includes('phone')) return standardPriceDatabase['mobile phone'];
+                if (name.includes('stanley') && name.includes('bottle')) return standardPriceDatabase['stanley bottle'];
+                
+                return null;
             }
             
             // Allow pressing Enter to search
@@ -900,230 +940,261 @@
                     {
                         name: "MacBook Pro 14-inch",
                         actualWeight: 3.5,
-                        dimensionalWeight: 5.2
+                        dimensionalWeight: 5.2,
+                        category: "Electronics",
+                        source: "Apple Official Website"
                     },
                     {
                         name: "iPhone 15 Pro",
                         actualWeight: 0.41,
-                        dimensionalWeight: 0.8
+                        dimensionalWeight: 0.8,
+                        category: "Electronics",
+                        source: "Apple Official Website"
                     },
                     {
                         name: "iPad Air",
                         actualWeight: 1.02,
-                        dimensionalWeight: 1.5
+                        dimensionalWeight: 1.5,
+                        category: "Electronics",
+                        source: "Apple Official Website"
                     },
                     {
                         name: "Samsung Galaxy S24",
                         actualWeight: 0.47,
-                        dimensionalWeight: 0.9
+                        dimensionalWeight: 0.9,
+                        category: "Electronics",
+                        source: "Samsung Official Website"
                     },
                     {
                         name: "Dell XPS 13 Laptop",
                         actualWeight: 2.7,
-                        dimensionalWeight: 4.1
+                        dimensionalWeight: 4.1,
+                        category: "Electronics",
+                        source: "Dell Official Website"
                     },
                     {
                         name: "Sony WH-1000XM5 Headphones",
                         actualWeight: 0.55,
-                        dimensionalWeight: 1.2
+                        dimensionalWeight: 1.2,
+                        category: "Electronics",
+                        source: "Sony Official Website"
+                    },
+                    // Fashion & Accessories
+                    {
+                        name: "Ray-Ban Aviator Sunglasses",
+                        actualWeight: 0.15,
+                        dimensionalWeight: 0.3,
+                        category: "Fashion",
+                        source: "Ray-Ban Official Website"
                     },
                     {
-                        name: "Nintendo Switch OLED",
-                        actualWeight: 0.93,
-                        dimensionalWeight: 1.8
+                        name: "Prescription Glasses",
+                        actualWeight: 0.2,
+                        dimensionalWeight: 0.4,
+                        category: "Fashion",
+                        source: "Typical Optical Store"
                     },
                     {
-                        name: "Canon EOS R5 Camera",
-                        actualWeight: 1.6,
-                        dimensionalWeight: 2.5
+                        name: "Leather Wallet",
+                        actualWeight: 0.3,
+                        dimensionalWeight: 0.5,
+                        category: "Fashion",
+                        source: "Typical Department Store"
                     },
+                    // Home & Kitchen
                     {
-                        name: "Samsung 65-inch QLED TV",
-                        actualWeight: 52.3,
-                        dimensionalWeight: 89.7
-                    },
-                    {
-                        name: "PlayStation 5",
-                        actualWeight: 9.9,
-                        dimensionalWeight: 14.2
-                    },
-                    
-                    // Furniture & Large Items
-                    {
-                        name: "Office Chair",
-                        actualWeight: 35.2,
-                        dimensionalWeight: 42.8
-                    },
-                    {
-                        name: "Gaming Desk",
-                        actualWeight: 62.5,
-                        dimensionalWeight: 78.3
-                    },
-                    {
-                        name: "Bookshelf",
-                        actualWeight: 45.8,
-                        dimensionalWeight: 67.4
-                    },
-                    {
-                        name: "Dining Table",
-                        actualWeight: 85.3,
-                        dimensionalWeight: 112.6
-                    },
-                    {
-                        name: "Sofa",
-                        actualWeight: 120.7,
-                        dimensionalWeight: 156.9
-                    },
-                    {
-                        name: "Mattress Queen Size",
-                        actualWeight: 68.4,
-                        dimensionalWeight: 92.1
-                    },
-                    
-                    // Appliances
-                    {
-                        name: "Refrigerator",
-                        actualWeight: 185.6,
-                        dimensionalWeight: 234.2
-                    },
-                    {
-                        name: "Washing Machine",
-                        actualWeight: 165.3,
-                        dimensionalWeight: 198.7
-                    },
-                    {
-                        name: "Microwave Oven",
-                        actualWeight: 28.7,
-                        dimensionalWeight: 35.4
+                        name: "Stanley Quencher Tumbler",
+                        actualWeight: 1.2,
+                        dimensionalWeight: 1.8,
+                        category: "Home & Kitchen",
+                        source: "Stanley Official Website"
                     },
                     {
                         name: "Coffee Maker",
-                        actualWeight: 8.9,
-                        dimensionalWeight: 12.3
-                    },
-                    
-                    // Sports & Outdoor
-                    {
-                        name: "Mountain Bike",
-                        actualWeight: 28.5,
-                        dimensionalWeight: 42.7
+                        actualWeight: 8.5,
+                        dimensionalWeight: 12.3,
+                        category: "Home & Kitchen",
+                        source: "Typical Appliance Store"
                     },
                     {
-                        name: "Treadmill",
-                        actualWeight: 215.8,
-                        dimensionalWeight: 278.4
+                        name: "Blender",
+                        actualWeight: 5.2,
+                        dimensionalWeight: 7.8,
+                        category: "Home & Kitchen",
+                        source: "Typical Appliance Store"
+                    },
+                    // Sports & Outdoors
+                    {
+                        name: "Basketball",
+                        actualWeight: 1.4,
+                        dimensionalWeight: 2.1,
+                        category: "Sports",
+                        source: "Typical Sports Store"
                     },
                     {
-                        name: "Tent 4-Person",
-                        actualWeight: 12.3,
-                        dimensionalWeight: 18.6
+                        name: "Yoga Mat",
+                        actualWeight: 2.8,
+                        dimensionalWeight: 4.5,
+                        category: "Sports",
+                        source: "Typical Sports Store"
+                    },
+                    // Health & Beauty
+                    {
+                        name: "Hair Dryer",
+                        actualWeight: 1.7,
+                        dimensionalWeight: 2.5,
+                        category: "Beauty",
+                        source: "Typical Beauty Store"
                     },
                     {
-                        name: "Kayak",
-                        actualWeight: 45.7,
-                        dimensionalWeight: 67.9
+                        name: "Electric Toothbrush",
+                        actualWeight: 0.6,
+                        dimensionalWeight: 1.1,
+                        category: "Beauty",
+                        source: "Typical Beauty Store"
+                    },
+                    // Books & Media
+                    {
+                        name: "Hardcover Book",
+                        actualWeight: 2.1,
+                        dimensionalWeight: 2.8,
+                        category: "Books",
+                        source: "Typical Bookstore"
+                    },
+                    {
+                        name: "Textbook",
+                        actualWeight: 3.5,
+                        dimensionalWeight: 4.2,
+                        category: "Books",
+                        source: "Typical Bookstore"
+                    },
+                    // Toys & Games
+                    {
+                        name: "Board Game",
+                        actualWeight: 2.3,
+                        dimensionalWeight: 3.1,
+                        category: "Toys",
+                        source: "Typical Toy Store"
+                    },
+                    {
+                        name: "Lego Set (Medium)",
+                        actualWeight: 1.8,
+                        dimensionalWeight: 2.7,
+                        category: "Toys",
+                        source: "Lego Official Website"
                     }
                 ];
                 
-                // Find matching product
-                for (const product of products) {
-                    if (term.includes(product.name.toLowerCase().split(' ')[0]) || 
-                        product.name.toLowerCase().includes(term)) {
-                        return {...product}; // Return a copy
+                // Filter products based on search term
+                const matchingProducts = products.filter(product => {
+                    return product.name.toLowerCase().includes(term) || 
+                           product.category.toLowerCase().includes(term);
+                });
+                
+                // If no exact matches, try fuzzy matching with common terms
+                if (matchingProducts.length === 0) {
+                    // Common product aliases
+                    const aliases = {
+                        'phone': ['iphone', 'samsung galaxy', 'smartphone'],
+                        'cell': ['iphone', 'samsung galaxy', 'smartphone'],
+                        'mobile': ['iphone', 'samsung galaxy', 'smartphone'],
+                        'computer': ['laptop', 'macbook pro', 'dell xps'],
+                        'notebook': ['laptop', 'macbook pro', 'dell xps'],
+                        'cup': ['stanley quencher tumbler', 'tumbler'],
+                        'mug': ['stanley quencher tumbler', 'tumbler'],
+                        'bottle': ['stanley quencher tumbler', 'tumbler'],
+                        'eyewear': ['ray-ban aviator sunglasses', 'prescription glasses', 'sunglasses'],
+                        'headset': ['sony wh-1000xm5 headphones', 'headphones'],
+                        'earphone': ['sony wh-1000xm5 headphones', 'headphones']
+                    };
+                    
+                    // Check if search term matches any aliases
+                    for (const alias in aliases) {
+                        if (term.includes(alias)) {
+                            aliases[alias].forEach(productName => {
+                                const matchedProduct = products.find(p => 
+                                    p.name.toLowerCase().includes(productName.toLowerCase())
+                                );
+                                if (matchedProduct && !matchingProducts.some(p => p.name === matchedProduct.name)) {
+                                    matchingProducts.push(matchedProduct);
+                                }
+                            });
+                        }
                     }
                 }
                 
-                // If no exact match, generate realistic weights based on product type
-                if (term.includes('laptop') || term.includes('macbook') || term.includes('notebook')) {
-                    return {
-                        name: searchTerm,
-                        actualWeight: (3 + Math.random() * 2).toFixed(2),
-                        dimensionalWeight: (4 + Math.random() * 2).toFixed(2)
-                    };
-                } else if (term.includes('phone') || term.includes('iphone') || term.includes('smartphone')) {
-                    return {
-                        name: searchTerm,
-                        actualWeight: (0.3 + Math.random() * 0.3).toFixed(2),
-                        dimensionalWeight: (0.6 + Math.random() * 0.4).toFixed(2)
-                    };
-                } else if (term.includes('tablet') || term.includes('ipad')) {
-                    return {
-                        name: searchTerm,
-                        actualWeight: (0.8 + Math.random() * 0.5).toFixed(2),
-                        dimensionalWeight: (1.2 + Math.random() * 0.6).toFixed(2)
-                    };
-                } else if (term.includes('headphone') || term.includes('earbud')) {
-                    return {
-                        name: searchTerm,
-                        actualWeight: (0.2 + Math.random() * 0.4).toFixed(2),
-                        dimensionalWeight: (0.8 + Math.random() * 0.5).toFixed(2)
-                    };
-                } else if (term.includes('camera')) {
-                    return {
-                        name: searchTerm,
-                        actualWeight: (1.0 + Math.random() * 1.5).toFixed(2),
-                        dimensionalWeight: (1.8 + Math.random() * 1.2).toFixed(2)
-                    };
-                } else if (term.includes('tv') || term.includes('television')) {
-                    return {
-                        name: searchTerm,
-                        actualWeight: (40 + Math.random() * 30).toFixed(2),
-                        dimensionalWeight: (60 + Math.random() * 40).toFixed(2)
-                    };
-                } else if (term.includes('chair') || term.includes('furniture')) {
-                    return {
-                        name: searchTerm,
-                        actualWeight: (25 + Math.random() * 25).toFixed(2),
-                        dimensionalWeight: (35 + Math.random() * 30).toFixed(2)
-                    };
-                } else if (term.includes('sofa') || term.includes('couch')) {
-                    return {
-                        name: searchTerm,
-                        actualWeight: (80 + Math.random() * 50).toFixed(2),
-                        dimensionalWeight: (120 + Math.random() * 60).toFixed(2)
-                    };
-                } else if (term.includes('refrigerator') || term.includes('fridge')) {
-                    return {
-                        name: searchTerm,
-                        actualWeight: (150 + Math.random() * 50).toFixed(2),
-                        dimensionalWeight: (200 + Math.random() * 50).toFixed(2)
-                    };
-                } else if (term.includes('bike') || term.includes('bicycle')) {
-                    return {
-                        name: searchTerm,
-                        actualWeight: (20 + Math.random() * 15).toFixed(2),
-                        dimensionalWeight: (35 + Math.random() * 20).toFixed(2)
-                    };
+                // If still no matches, return some generic products based on category
+                if (matchingProducts.length === 0) {
+                    if (term.includes('shirt') || term.includes('clothing') || term.includes('fashion')) {
+                        matchingProducts.push(
+                            {
+                                name: "Men's Cotton T-Shirt",
+                                actualWeight: 0.4,
+                                dimensionalWeight: 0.6,
+                                category: "Fashion",
+                                source: "Typical Clothing Store"
+                            }
+                        );
+                    } else if (term.includes('shoe') || term.includes('sneaker') || term.includes('footwear')) {
+                        matchingProducts.push(
+                            {
+                                name: "Running Shoes",
+                                actualWeight: 2.2,
+                                dimensionalWeight: 3.5,
+                                category: "Fashion",
+                                source: "Typical Shoe Store"
+                            }
+                        );
+                    } else if (term.includes('book') || term.includes('novel') || term.includes('reading')) {
+                        matchingProducts.push(
+                            {
+                                name: "Paperback Book",
+                                actualWeight: 0.8,
+                                dimensionalWeight: 1.2,
+                                category: "Books",
+                                source: "Typical Bookstore"
+                            }
+                        );
+                    } else if (term.includes('toy') || term.includes('game') || term.includes('play')) {
+                        matchingProducts.push(
+                            {
+                                name: "Action Figure",
+                                actualWeight: 0.3,
+                                dimensionalWeight: 0.7,
+                                category: "Toys",
+                                source: "Typical Toy Store"
+                            }
+                        );
+                    } else {
+                        // Return some generic products
+                        matchingProducts.push(
+                            {
+                                name: "Generic Electronic Device",
+                                actualWeight: 1.5,
+                                dimensionalWeight: 2.2,
+                                category: "Electronics",
+                                source: "Generic Product Database"
+                            },
+                            {
+                                name: "Generic Fashion Item",
+                                actualWeight: 0.5,
+                                dimensionalWeight: 0.9,
+                                category: "Fashion",
+                                source: "Generic Product Database"
+                            },
+                            {
+                                name: "Generic Home Item",
+                                actualWeight: 3.0,
+                                dimensionalWeight: 4.5,
+                                category: "Home & Kitchen",
+                                source: "Generic Product Database"
+                            }
+                        );
+                    }
                 }
                 
-                // Default for unknown products
-                return {
-                    name: searchTerm,
-                    actualWeight: (1 + Math.random() * 4).toFixed(2),
-                    dimensionalWeight: (1.5 + Math.random() * 3).toFixed(2)
-                };
+                return matchingProducts;
             }
-            
-            // Mobile-specific optimizations
-            function optimizeForMobile() {
-                if (window.innerWidth <= 768) {
-                    // Add touch-friendly improvements
-                    document.querySelectorAll('button').forEach(button => {
-                        button.style.minHeight = '44px'; // Apple's recommended minimum touch target size
-                    });
-                    
-                    // Adjust font sizes for better readability
-                    document.querySelectorAll('input, select').forEach(element => {
-                        element.style.fontSize = '16px'; // Prevents zoom on iOS
-                    });
-                }
-            }
-            
-            // Initialize mobile optimizations
-            optimizeForMobile();
-            
-            // Re-optimize on resize
-            window.addEventListener('resize', optimizeForMobile);
         });
     </script>
 </body>
