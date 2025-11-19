@@ -413,6 +413,11 @@
                 font-size: 18px;
                 padding: 15px 10px;
             }
+            
+            input, select, button {
+                font-size: 16px; /* Prevents zoom on iOS */
+                min-height: 44px; /* Better touch targets */
+            }
         }
         
         /* Desktop-specific enhancements */
@@ -436,6 +441,27 @@
             .results-section {
                 padding: 25px;
             }
+            
+            /* Better hover effects for desktop */
+            button:hover {
+                transform: translateY(-2px);
+                box-shadow: var(--shadow);
+            }
+            
+            input:hover, select:hover {
+                border-color: #bbb;
+            }
+        }
+        
+        /* Large desktop screens */
+        @media (min-width: 1200px) {
+            .container {
+                max-width: 1100px;
+            }
+            
+            .content {
+                padding: 40px;
+            }
         }
         
         /* Animation for better UX */
@@ -453,6 +479,34 @@
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             font-weight: bold;
+        }
+        
+        /* Touch device improvements */
+        @media (hover: none) {
+            button:hover {
+                transform: none;
+            }
+            
+            button:active {
+                transform: scale(0.98);
+            }
+        }
+        
+        /* High contrast mode support */
+        @media (prefers-contrast: high) {
+            :root {
+                --primary-teal: #006666;
+                --accent-orange: #cc0000;
+            }
+        }
+        
+        /* Reduced motion support */
+        @media (prefers-reduced-motion: reduce) {
+            * {
+                animation-duration: 0.01ms !important;
+                animation-iteration-count: 1 !important;
+                transition-duration: 0.01ms !important;
+            }
         }
     </style>
 </head>
@@ -674,6 +728,8 @@
                 'prescription glasses': 45,
                 'shoes': 30,
                 'mobile phone': 40,
+                'woman purse': 45,
+                'purse': 45,
                 'stanley bottle': 15
             };
             
@@ -917,6 +973,8 @@
                 if (name.includes('prescription') && name.includes('glass')) return standardPriceDatabase['prescription glasses'];
                 if (name.includes('shoes') && !name.includes('children')) return standardPriceDatabase['shoes'];
                 if (name.includes('mobile') && name.includes('phone')) return standardPriceDatabase['mobile phone'];
+                if (name.includes('woman') && name.includes('purse')) return standardPriceDatabase['woman purse'];
+                if (name.includes('purse')) return standardPriceDatabase['purse'];
                 if (name.includes('stanley') && name.includes('bottle')) return standardPriceDatabase['stanley bottle'];
                 
                 return null;
@@ -998,6 +1056,20 @@
                         name: "Leather Wallet",
                         actualWeight: 0.3,
                         dimensionalWeight: 0.5,
+                        category: "Fashion",
+                        source: "Typical Department Store"
+                    },
+                    {
+                        name: "Women's Handbag",
+                        actualWeight: 1.8,
+                        dimensionalWeight: 2.5,
+                        category: "Fashion",
+                        source: "Typical Department Store"
+                    },
+                    {
+                        name: "Designer Purse",
+                        actualWeight: 1.2,
+                        dimensionalWeight: 1.8,
                         category: "Fashion",
                         source: "Typical Department Store"
                     },
@@ -1105,7 +1177,10 @@
                         'bottle': ['stanley quencher tumbler', 'tumbler'],
                         'eyewear': ['ray-ban aviator sunglasses', 'prescription glasses', 'sunglasses'],
                         'headset': ['sony wh-1000xm5 headphones', 'headphones'],
-                        'earphone': ['sony wh-1000xm5 headphones', 'headphones']
+                        'earphone': ['sony wh-1000xm5 headphones', 'headphones'],
+                        'bag': ["women's handbag", "designer purse"],
+                        'handbag': ["women's handbag", "designer purse"],
+                        'purse': ["women's handbag", "designer purse"]
                     };
                     
                     // Check if search term matches any aliases
@@ -1163,6 +1238,16 @@
                                 dimensionalWeight: 0.7,
                                 category: "Toys",
                                 source: "Typical Toy Store"
+                            }
+                        );
+                    } else if (term.includes('purse') || term.includes('handbag') || term.includes('bag')) {
+                        matchingProducts.push(
+                            {
+                                name: "Women's Leather Purse",
+                                actualWeight: 1.5,
+                                dimensionalWeight: 2.2,
+                                category: "Fashion",
+                                source: "Typical Department Store"
                             }
                         );
                     } else {
