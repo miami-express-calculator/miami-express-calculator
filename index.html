@@ -508,6 +508,22 @@
                 transition-duration: 0.01ms !important;
             }
         }
+        
+        /* Error message styling */
+        .error-message {
+            color: var(--accent-orange);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+        
+        /* Success message styling */
+        .success-message {
+            color: var(--primary-teal);
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
     </style>
 </head>
 <body>
@@ -530,6 +546,7 @@
                         <i class="fas fa-search"></i> Search Product
                     </button>
                 </div>
+                <div id="search-error" class="error-message"></div>
             </div>
             
             <div class="results-section">
@@ -585,6 +602,7 @@
                                 <i class="fas fa-check"></i> Apply
                             </button>
                         </div>
+                        <div id="actual-weight-error" class="error-message"></div>
                         
                         <div class="manual-input-row">
                             <span>Dimensional Weight (lbs):</span>
@@ -593,6 +611,7 @@
                                 <i class="fas fa-check"></i> Apply
                             </button>
                         </div>
+                        <div id="dimensional-weight-error" class="error-message"></div>
                         
                         <div class="manual-input-row">
                             <span>Or calculate dimensional weight from dimensions:</span>
@@ -600,6 +619,7 @@
                                 <i class="fas fa-ruler-combined"></i> Calculate
                             </button>
                         </div>
+                        <div id="dimensional-calc-success" class="success-message"></div>
                     </div>
                 </div>
                 
@@ -616,6 +636,7 @@
                     <span>$</span>
                     <input type="number" id="item-price" min="0" step="0.01" placeholder="e.g., 299.99">
                 </div>
+                <div id="price-error" class="error-message"></div>
             </div>
             
             <div class="tax-section">
@@ -626,6 +647,7 @@
                     <input type="number" id="tax-percentage" min="0" max="100" step="0.1" placeholder="e.g., 5.5">
                     <span>%</span>
                 </div>
+                <div id="tax-error" class="error-message"></div>
             </div>
             
             <div class="final-price" id="final-price" style="display: none;">
@@ -697,26 +719,52 @@
             const breakdown = document.getElementById('breakdown');
             const qrCodeElement = document.getElementById('qr-code');
             
+            // Error message elements
+            const searchError = document.getElementById('search-error');
+            const actualWeightError = document.getElementById('actual-weight-error');
+            const dimensionalWeightError = document.getElementById('dimensional-weight-error');
+            const dimensionalCalcSuccess = document.getElementById('dimensional-calc-success');
+            const priceError = document.getElementById('price-error');
+            const taxError = document.getElementById('tax-error');
+            
             let currentProduct = null;
             
             // Generate QR Code
             function generateQRCode() {
                 const currentUrl = window.location.href;
-                QRCode.toCanvas(qrCodeElement, currentUrl, {
-                    width: 200,
-                    height: 200,
-                    margin: 1,
-                    color: {
-                        dark: '#2c3e50',
-                        light: '#ffffff'
-                    }
-                }, function(error) {
-                    if (error) console.error(error);
-                });
+                try {
+                    QRCode.toCanvas(qrCodeElement, currentUrl, {
+                        width: 200,
+                        height: 200,
+                        margin: 1,
+                        color: {
+                            dark: '#2c3e50',
+                            light: '#ffffff'
+                        }
+                    }, function(error) {
+                        if (error) {
+                            console.error('QR Code generation error:', error);
+                            qrCodeElement.innerHTML = '<p>QR Code could not be generated</p>';
+                        }
+                    });
+                } catch (error) {
+                    console.error('QR Code generation error:', error);
+                    qrCodeElement.innerHTML = '<p>QR Code could not be generated</p>';
+                }
             }
             
             // Generate QR code on page load
             generateQRCode();
+
+            // Clear error messages
+            function clearErrorMessages() {
+                searchError.style.display = 'none';
+                actualWeightError.style.display = 'none';
+                dimensionalWeightError.style.display = 'none';
+                dimensionalCalcSuccess.style.display = 'none';
+                priceError.style.display = 'none';
+                taxError.style.display = 'none';
+            }
 
             // Standard price database
             const standardPriceDatabase = {
@@ -735,10 +783,12 @@
             
             // Search for product
             searchBtn.addEventListener('click', function() {
+                clearErrorMessages();
                 const searchTerm = productSearch.value.trim();
                 
                 if (!searchTerm) {
-                    alert('Please enter a product to search for');
+                    searchError.textContent = 'Please enter a product to search for';
+                    searchError.style.display = 'block';
                     return;
                 }
                 
@@ -783,6 +833,7 @@
             
             // Manual weight input
             applyActualBtn.addEventListener('click', function() {
+                clearErrorMessages();
                 const manualWeight = parseFloat(document.getElementById('manual-actual-weight').value);
                 if (manualWeight && manualWeight > 0) {
                     if (!currentProduct) {
@@ -801,11 +852,13 @@
                     
                     updateShippingCost();
                 } else {
-                    alert('Please enter a valid weight');
+                    actualWeightError.textContent = 'Please enter a valid weight';
+                    actualWeightError.style.display = 'block';
                 }
             });
             
             applyDimensionalBtn.addEventListener('click', function() {
+                clearErrorMessages();
                 const manualWeight = parseFloat(document.getElementById('manual-dimensional-weight').value);
                 if (manualWeight && manualWeight > 0) {
                     if (!currentProduct) {
@@ -824,35 +877,58 @@
                     
                     updateShippingCost();
                 } else {
-                    alert('Please enter a valid weight');
+                    dimensionalWeightError.textContent = 'Please enter a valid weight';
+                    dimensionalWeightError.style.display = 'block';
                 }
             });
             
             // Calculate dimensional weight from dimensions using IATA formula
             calculateDimensionalBtn.addEventListener('click', function() {
-                const length = prompt('Enter package length (inches):');
-                const width = prompt('Enter package width (inches):');
-                const height = prompt('Enter package height (inches):');
+                clearErrorMessages();
+                const length = parseFloat(prompt('Enter package length (inches):'));
+                const width = parseFloat(prompt('Enter package width (inches):'));
+                const height = parseFloat(prompt('Enter package height (inches):'));
                 
-                if (length && width && height) {
+                if (length && width && height && length > 0 && width > 0 && height > 0) {
                     // IATA formula: (L x W x H) / 139
                     const dimensionalWeight = (length * width * height) / 139;
                     const roundedWeight = Math.round(dimensionalWeight * 10) / 10;
                     
                     document.getElementById('manual-dimensional-weight').value = roundedWeight;
-                    alert(`Dimensional weight calculated (IATA): ${roundedWeight} lbs\nFormula: (${length} × ${width} × ${height}) / 139 = ${roundedWeight}`);
+                    dimensionalCalcSuccess.textContent = `Dimensional weight calculated (IATA): ${roundedWeight} lbs\nFormula: (${length} × ${width} × ${height}) / 139 = ${roundedWeight}`;
+                    dimensionalCalcSuccess.style.display = 'block';
+                } else {
+                    dimensionalWeightError.textContent = 'Please enter valid dimensions';
+                    dimensionalWeightError.style.display = 'block';
                 }
             });
             
             // Calculate final price
             calculateBtn.addEventListener('click', function() {
+                clearErrorMessages();
+                let hasError = false;
+                
                 if (!currentProduct) {
-                    alert('Please search for a product or enter weights manually first');
-                    return;
+                    searchError.textContent = 'Please search for a product or enter weights manually first';
+                    searchError.style.display = 'block';
+                    hasError = true;
                 }
                 
-                const itemPrice = parseFloat(document.getElementById('item-price').value) || 0;
-                const taxPercentage = parseFloat(document.getElementById('tax-percentage').value) || 0;
+                const itemPrice = parseFloat(document.getElementById('item-price').value);
+                if (!itemPrice || itemPrice < 0) {
+                    priceError.textContent = 'Please enter a valid item price';
+                    priceError.style.display = 'block';
+                    hasError = true;
+                }
+                
+                const taxPercentage = parseFloat(document.getElementById('tax-percentage').value);
+                if (taxPercentage < 0 || taxPercentage > 100) {
+                    taxError.textContent = 'Please enter a valid tax percentage (0-100)';
+                    taxError.style.display = 'block';
+                    hasError = true;
+                }
+                
+                if (hasError) return;
                 
                 // Calculate base shipping cost
                 const selectedWeight = Math.max(currentProduct.actualWeight, currentProduct.dimensionalWeight);
@@ -892,6 +968,7 @@
             
             // Clear all inputs
             clearBtn.addEventListener('click', function() {
+                clearErrorMessages();
                 productSearch.value = '';
                 document.getElementById('item-price').value = '';
                 document.getElementById('tax-percentage').value = '';
